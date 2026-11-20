@@ -9,12 +9,12 @@ const TYPES = {
   work:   { label: 'Arbeit',       color: '#1f8a4c' },
   pause:  { label: 'Pause',        color: '#d99a00' },
   smoke:  { label: 'Raucherpause', color: '#a8622a' },
-  driver: { label: 'Beifahrer',    color: '#2a6fb8' },
+  driver: { label: 'Fahrzeit',     color: '#2a6fb8' },
   wait:   { label: 'Wartezeit',    color: '#7a4bb0' },
 };
 const STATUS_TEXT = {
   idle: 'Nicht gestartet', work: 'Arbeit läuft', pause: 'Pause', smoke: 'Raucherpause',
-  driver: 'Beifahrer', wait: 'Wartezeit', ended: 'Arbeitstag abgeschlossen',
+  driver: 'Fahrzeit', wait: 'Wartezeit', ended: 'Arbeitstag abgeschlossen',
 };
 
 function load(key, fallback) {
@@ -608,15 +608,15 @@ function buildPdf() {
   doc.text('Arbeitszeit ' + hm(state.dayStart) + '–' + hm(state.dayEnd) + ' Uhr = ' + fmtDur(mins(state.dayStart, state.dayEnd)) + ', abzüglich Pausen und Raucherpausen.', L + 2, y);
   y += 6;
 
-  // Beifahrer
-  section('Beifahrerzeiten (nur zur Info)');
+  // Fahrzeit
+  section('Fahrzeiten (nur zur Info)');
   const drives = state.events.filter((e) => e.type === 'driver');
   if (drives.length) {
     table(
       [{ t: 'Beginn', w: 30 }, { t: 'Ende', w: 30 }, { t: 'Dauer', w: W - 60, a: 'right' }],
       drives.map((e) => ({ cells: [hm(e.start) + ' Uhr', hm(e.end) + ' Uhr', fmtDur(mins(e.start, e.end))] })),
     );
-  } else note('Keine Beifahrerzeiten erfasst.');
+  } else note('Keine Fahrzeiten erfasst.');
 
   // Wartezeiten
   section('Wartezeiten (nur zur Info)');
