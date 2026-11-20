@@ -500,6 +500,18 @@ function toast(msg) {
 }
 
 /* ================= PDF ================= */
+// Firmenlogo für den Stundenzettel (unverändert, nur skaliert)
+let logoData = null;
+fetch('logo.jpg')
+  .then((r) => (r.ok ? r.blob() : null))
+  .then((b) => {
+    if (!b) return;
+    const fr = new FileReader();
+    fr.onload = () => { logoData = fr.result; };
+    fr.readAsDataURL(b);
+  })
+  .catch(() => {});
+
 function buildPdf() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
@@ -511,10 +523,18 @@ function buildPdf() {
   const font = (size, style, gray) => { doc.setFont('helvetica', style || 'normal'); doc.setFontSize(size); doc.setTextColor(gray ?? 20); };
   const hline = (yy, gray) => { doc.setDrawColor(gray ?? 200); doc.setLineWidth(0.2); doc.line(L, yy, R, yy); };
 
-  // Kopf
-  font(20, 'bold'); doc.text('Stundenzettel', L, y);
-  font(10, 'normal', 90); doc.text(fmtDate(state.dayStart), R, y, { align: 'right' });
-  y += 9;
+  // Kopf: Logo links, Titel und Datum rechts
+  if (logoData) {
+    const lw = 80, lh = lw * 914 / 2576; // Seitenverhältnis des Logos beibehalten
+    doc.addImage(logoData, 'JPEG', L - 2, 10, lw, lh);
+    font(20, 'bold'); doc.text('Stundenzettel', R, 10 + lh / 2 - 1, { align: 'right' });
+    font(10, 'normal', 90); doc.text(fmtDate(state.dayStart), R, 10 + lh / 2 + 6, { align: 'right' });
+    y = 10 + lh + 7;
+  } else {
+    font(20, 'bold'); doc.text('Stundenzettel', L, y);
+    font(10, 'normal', 90); doc.text(fmtDate(state.dayStart), R, y, { align: 'right' });
+    y += 9;
+  }
   font(11, 'normal', 90); doc.text('Mitarbeiter:', L, y);
   font(11, 'bold'); doc.text(employee || '—', L + 24, y);
   y += 6;

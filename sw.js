@@ -1,8 +1,8 @@
 // Offline-Speicher für die App-Dateien (keine Nutzerdaten).
-const CACHE = 'zeiterfassung-v1';
+const CACHE = 'zeiterfassung-v2';
 const FILES = [
   './', 'index.html', 'style.css', 'app.js', 'jspdf.umd.min.js', 'manifest.webmanifest',
-  'icon-192.png', 'icon-512.png', 'apple-touch-icon.png',
+  'icon-192.png', 'icon-512.png', 'apple-touch-icon.png', 'logo.jpg',
 ];
 
 self.addEventListener('install', (e) => {
