@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Zeiterfassung</title>
+  <meta name="theme-color" content="#1f6f43">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Zeiterfassung">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>Zeiterfassung</h1>
+      <div class="sub" id="who"></div>
+    </div>
+    <div class="clock" id="clock">--:--</div>
+  </header>
+
+  <main>
+    <div class="banner" id="oldBanner" hidden></div>
+
+    <section class="card status" id="statusCard">
+      <div class="status-label" id="statusLabel">Nicht gestartet</div>
+      <div class="status-detail" id="statusDetail">Baustelle eingeben und auf Start tippen.</div>
+      <div class="status-net" id="statusNet"></div>
+    </section>
+
+    <section class="site-row">
+      <label for="siteInput">Baustelle</label>
+      <div class="site-input-wrap">
+        <input id="siteInput" list="siteList" autocomplete="off" placeholder="Name der Baustelle" enterkeyhint="done">
+        <button id="plusBtn" class="plus" type="button" aria-label="Baustelle wechseln" title="Baustelle wechseln">+</button>
+      </div>
+      <datalist id="siteList"></datalist>
+    </section>
+
+    <section class="grid">
+      <button class="big b-start" id="btnStart" data-type="work"><span class="ico">▶</span><span>Start</span></button>
+      <button class="big b-pause" id="btnPause" data-type="pause"><span class="ico">⏸</span><span>Pause</span></button>
+      <button class="big b-smoke" id="btnSmoke" data-type="smoke"><span class="ico">🚬</span><span>Raucherpause</span></button>
+      <button class="big b-driver" id="btnDriver" data-type="driver"><span class="ico">🚗</span><span>Beifahrer</span></button>
+      <div class="big-wrap">
+        <button class="big b-wait" id="btnWait" data-type="wait"><span class="ico">⏳</span><span>Wartezeit</span></button>
+        <button class="mini-mic" id="btnWaitMic" type="button" aria-label="Grund der Wartezeit diktieren">🎤</button>
+      </div>
+      <button class="big b-end" id="btnEnd"><span class="ico">⏹</span><span>Ende</span></button>
+      <button class="big b-desc" id="btnDesc"><span class="ico">📝</span><span>Beschreibung</span></button>
+      <button class="big b-mat" id="btnMat"><span class="ico">🧰</span><span>Material</span></button>
+    </section>
+
+    <section class="card done" id="doneCard" hidden>
+      <h2>Arbeitstag abgeschlossen</h2>
+      <p>Der Stundenzettel ist fertig.</p>
+      <button class="wide primary" id="btnShare">📧 Stundenzettel teilen / per E-Mail senden</button>
+      <button class="wide" id="btnView">📄 PDF ansehen / speichern</button>
+      <button class="wide subtle" id="btnNewDay">Neuen Arbeitstag beginnen</button>
+    </section>
+
+    <section id="sitesSection" hidden>
+      <h2 class="sec">Baustellen heute</h2>
+      <div id="sites"></div>
+    </section>
+
+    <section id="logSection" hidden>
+      <h2 class="sec">Tagesprotokoll</h2>
+      <div class="card log" id="log"></div>
+    </section>
+
+    <footer class="foot">
+      <button class="link" id="btnName" type="button">Name ändern</button>
+      <span>Alle Daten bleiben nur auf diesem Handy.</span>
+    </footer>
+  </main>
+
+  <!-- Dialog -->
+  <div class="modal" id="modal" hidden>
+    <div class="dialog" role="dialog" aria-modal="true">
+      <h3 id="mTitle"></h3>
+      <p id="mText"></p>
+      <input id="mInput" list="siteList" autocomplete="off" hidden>
+      <div class="m-actions">
+        <button class="m-cancel" id="mCancel">Abbrechen</button>
+        <button class="m-ok" id="mOk">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Diktat -->
+  <div class="modal" id="dictModal" hidden>
+    <div class="dialog dict">
+      <div class="pulse">🎤</div>
+      <h3 id="dTitle">Diktat</h3>
+      <p class="hint" id="dHint">Bitte sprechen …</p>
+      <div class="d-text" id="dText"></div>
+      <div class="m-actions">
+        <button class="m-ok" id="dStop">Fertig</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="jspdf.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
